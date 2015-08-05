@@ -6,30 +6,30 @@
 
 		// The follow variables are used to define the table structure for new and upgrade installations.
 		$create_useronline_table = ("CREATE TABLE {$wp_prefix}statistics_useronline (
-			ID int(11) NOT NULL AUTO_INCREMENT,
+			ID int(11) NOT NULL,
 			ip varchar(60) NOT NULL,
 			created int(11),
 			timestamp int(10) NOT NULL,
 			date datetime NOT NULL,
-			referred text CHARACTER SET utf8 NOT NULL,
+			referred text NOT NULL,
 			agent varchar(255) NOT NULL,
 			platform varchar(255),
 			version varchar(255),
 			location varchar(10),
 			PRIMARY KEY  (ID)
-		) CHARSET=utf8");
+		)");
 		
 		$create_visit_table = ("CREATE TABLE {$wp_prefix}statistics_visit (
-			ID int(11) NOT NULL AUTO_INCREMENT,
+			ID int(11) NOT NULL,
 			last_visit datetime NOT NULL,
 			last_counter date NOT NULL,
 			visit int(10) NOT NULL,
 			PRIMARY KEY  (ID),
-			UNIQUE KEY unique_date (last_counter)
-		) CHARSET=utf8");
+			UNIQUE (last_counter)
+		)");
 		
 		$create_visitor_table = ("CREATE TABLE {$wp_prefix}statistics_visitor (
-			ID int(11) NOT NULL AUTO_INCREMENT,
+			ID int(11) NOT NULL,
 			last_counter date NOT NULL,
 			referred text NOT NULL,
 			agent varchar(255) NOT NULL,
@@ -41,60 +41,48 @@
 			hits int(11),
 			honeypot int(11),
 			PRIMARY KEY  (ID),
-			UNIQUE KEY date_ip_agent (last_counter,ip,agent(75),platform(75),version(75)),
-			KEY agent (agent),
-			KEY platform (platform),
-			KEY version (version),
-			KEY location (location)
-		) CHARSET=utf8");
+			UNIQUE (last_counter,ip,agent,platform,version)
+		)");
 		
 		$create_exclusion_table = ("CREATE TABLE {$wp_prefix}statistics_exclusions (
-			ID int(11) NOT NULL AUTO_INCREMENT,
+			ID int(11) NOT NULL,
 			date date NOT NULL,
 			reason varchar(255) DEFAULT NULL,
 			count bigint(20) NOT NULL,
-			PRIMARY KEY  (ID),
-			KEY date (date),
-			KEY reason (reason)
-		) CHARSET=utf8");
+			PRIMARY KEY  (ID)
+		)");
 
 		$create_pages_table = ("CREATE TABLE {$wp_prefix}statistics_pages (
 			uri varchar(255) NOT NULL,
 			date date NOT NULL,
 			count int(11) NOT NULL,
 			id int(11) NOT NULL,
-			UNIQUE KEY date_2 (date,uri),
-			KEY url (uri),
-			KEY date (date),
-			KEY id (id)
-		) CHARSET=utf8");
+			UNIQUE (date,uri)
+		)");
 
 		$create_historical_table = ("CREATE TABLE {$wp_prefix}statistics_historical (
-			ID bigint(20) NOT NULL AUTO_INCREMENT,
+			ID bigint(20) NOT NULL,
 			category varchar(25) NOT NULL,
 			page_id bigint(20) NOT NULL,
 			uri varchar(255) NOT NULL,
 			value bigint(20) NOT NULL,
 			PRIMARY KEY  (ID),
-			KEY category (category),
-			UNIQUE KEY page_id (page_id),
-			UNIQUE KEY uri (uri)
-		) CHARSET=utf8");
+			UNIQUE (page_id),
+			UNIQUE (uri)
+		)");
 		
 		$create_search_table = ("CREATE TABLE {$wp_prefix}statistics_search (
-			ID bigint(20) NOT NULL AUTO_INCREMENT,
+			ID bigint(20) NOT NULL,
 			last_counter date NOT NULL,
 			engine varchar(64) NOT NULL,
 			host varchar(255),
 			words varchar(255),
 			visitor bigint(20),
-			PRIMARY KEY  (ID),
-			KEY last_counter (last_counter),
-			KEY engine (engine),
-			KEY host (host)
-		) CHARSET=utf8");
+			PRIMARY KEY  (ID)
+		)");
 
 		// Before we update the historical table, check to see if it exists with the old keys
+		/*
 		$result = $wpdb->query( "SHOW COLUMNS FROM {$wp_prefix}statistics_historical LIKE 'key'" );
 		
 		if( $result > 0 ) {
@@ -102,6 +90,7 @@
 			$wpdb->query( "ALTER TABLE `{$wp_prefix}statistics_historical` CHANGE `key` `ID` bigint(20)" );
 			$wpdb->query( "ALTER TABLE `{$wp_prefix}statistics_historical` CHANGE `type` `category` varchar(25)" );
 		}
+		*/
 		
 		// This includes the dbDelta function from WordPress.
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -116,6 +105,7 @@
 		dbDelta($create_search_table);
 
 		// Check to see if the date_ip index still exists, if so get rid of it.
+		/*
 		$result = $wpdb->query("SHOW INDEX FROM {$wp_prefix}statistics_visitor WHERE Key_name = 'date_ip'");
 
 		// Note, the result will be the number of fields contained in the index.
@@ -129,6 +119,7 @@
 		if( $result > 0 ) {
 			$wpdb->query( "ALTER TABLE `{$wp_prefix}statistics_historical` DROP `AString`" );
 		}
+		*/
 		
 		// Store the new version information.
 		update_option('wp_statistics_plugin_version', WP_STATISTICS_VERSION);
