@@ -1,4 +1,4 @@
-=== WP Statistics ===
+=== WP Statistics (with SQlite compatibility) ===
 Contributors: mostafa.s1990, GregRoss
 Donate link: http://wp-statistics.com/donate/
 Tags: statistics, stats, visit, visitors, chart, browser, blog, today, yesterday, week, month, year, total, post, page, sidebar, summary, feedburner, hits, pagerank, google, alexa, live visit
@@ -8,6 +8,8 @@ Stable tag: 9.5.2
 License: GPL3
 
 Complete statistics for your WordPress site.
+
+This version of WP Statistics was adopted to work with the plugin "SQLite Integration" for Wordpress.
 
 == Description ==
 A comprehensive plugin for your WordPress visitor statistics, come visit us at our [website](http://wp-statistics.com) for all the latest news and information.
